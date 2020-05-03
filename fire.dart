@@ -1,3 +1,4 @@
+/*
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -6,10 +7,10 @@ final Firestore _firestore = Firestore.instance;
 
 class Fire {
   createAccount(
-    String email,
-    String uid,
-    String displayName,
-  ) {
+      String email,
+      String uid,
+      String displayName,
+      ) {
     _firestore.collection('UserData').document(uid).setData(
       {
         "email": email,
@@ -28,4 +29,4 @@ class Fire {
       },
     );
   }
-}
+ */

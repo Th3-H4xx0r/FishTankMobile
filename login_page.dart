@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
       });
     }).then((_){
       if(error == false){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MainFrame()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
       }
     });
 

@@ -1,13 +1,15 @@
+import 'package:fishtank/Widgets/video_widget.dart';
+import 'package:fishtank/datamanagement.dart';
+import 'package:fishtank/ui_management.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
+//import 'package:image_picker/image_picker.dart';
 
-import '../Business_Logic/storage.dart';
+//import 'storage.dart';
 
 final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-final _storage = Storage();
+//final _storage = Storage();
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -15,21 +17,19 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  //Instances
+  var uiManagementInstance = UIManagement();
+  var dataManagementInstance = DataManagement();
+  List myPosts = [];
+  var projectCount = 0;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+
   var userUid = '';
 
   File _image;
-
-  Future getImageFromGallery() async {
-    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        _image = image;
-      });
-      print(image.path);
-      // cant print image.path if there is no image - ex. going back out of gallery
-      _storage.uploadProfileImage(context, image);
-    }
-  }
 
   Future getUserUid() async {
     FirebaseUser currentUser = await _firebaseAuth.currentUser();
@@ -38,11 +38,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     print(uid);
   }
 
+  Future updateData() async {
+    myPosts = await dataManagementInstance.getLatestPosts();
+    projectCount = myPosts.length;
+  }
+
   @override
   void initState() {
     getUserUid().then((_) {
       print("got uid");
-      setState(() {});
+      updateData().then((value){
+        setState(() {});
+      });
+
     });
 
     super.initState();
@@ -50,27 +58,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return MaterialApp(
+      home: Scaffold(
+        key: _scaffoldKey,
+        drawer: uiManagementInstance.drawerWidget(context),
         body: Container(
           height: double.infinity,
           width: double.infinity,
-          color: Colors.black,
+          color: Color.fromRGBO(21, 21, 21, 1),
           child: Column(
             children: <Widget>[
+
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.05,
+                height: 40,
+              ),
+
+              Row(
+                children: <Widget>[
+
+                  SizedBox(
+                    width: 20,
+                  ),
+
+                  IconButton(
+                    color: Colors.white,
+                    icon: Icon(Icons.dehaze),
+                    onPressed: () {
+                      _scaffoldKey.currentState.openDrawer();
+                    },
+                  )
+                ],
+              ),
+
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.02,
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20.0),
+                padding: const EdgeInsets.only(left: 30.0),
                 child: Row(
                   children: <Widget>[
                     Text(
                       'Profile',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 40,
-                        fontWeight: FontWeight.w800,
+                        fontSize: 35,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ],
@@ -81,41 +113,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    ////
-                    /////
-                    ///
-                    StreamBuilder<DocumentSnapshot>(
-                        stream: Firestore.instance
-                            .collection('UserData')
-                            .document(userUid)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Text("Loading");
-                          } else {
-                            Map<String, dynamic> documentFields =
-                                snapshot.data.data;
-                            return documentFields['profile image url'] !=
-                                        null ||
-                                    documentFields['profile image url'] != ''
-                                ? profileImage(context, documentFields['profile image url'], getImageFromGallery)
-                                : Container(
-                                    width: 110,
-                                    height: 110,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blue,
-                                    ),
-                                  );
-                          }
-                        }),
+
+                    Container(
+                      padding: EdgeInsets.only(left: 20),
+                      child: CircleAvatar(
+                          radius: 40,
+                          child: Center(
+                            child: Text("P"),
+                          )
+                      ),
+                    ),
+
                     //profileImage(context,'https://i.pinimg.com/originals/80/52/16/805216f1569bcbabc2b2a65e946e6cef.jpg'),
                     Column(
                       children: <Widget>[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            data(context, 'Projects', 4),
+                            data(context, 'Projects', projectCount),
                             data(context, 'Followers', 2000),
                             data(context, 'Following', 500),
                           ],
@@ -144,59 +159,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: bio(
                   context,
-                  'John Doe',
+                  'Pranav Krishna',
                   "Developer",
-                  "Hello, my name is john and this is my bio.  There is nothing currently here so this is boring :(",
+                  "Hello, my name is Pranav Krishna and this is my profile page.",
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: informationBar(context),
-              ),
+
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.02,
+                height: 20,
               ),
+
+              Row(
+                children: [
+                  SizedBox(
+                    width: 20,
+                  ),
+
+                  Text("Projects", style: TextStyle(color: Colors.grey[400], fontSize: 25, fontWeight: FontWeight.w700),),
+                ],
+              ),
+
               Container(
-                height: MediaQuery.of(context).size.height * 0.35,
-                child: ListView(
-                  children: <Widget>[
-                    project(
+                height: MediaQuery.of(context).size.height * 0.34,
+                child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  itemCount: myPosts.length,
+                  itemBuilder: (context, int index){
+                    return project(
                       context,
-                      'Hacker Q Mobile',
-                      Icon(
-                        Icons.android,
-                        color: Colors.white,
-                        size: 15,
-                      ),
-                      'Android',
-                      'Hacker Q mobile description will go here. Welcome to haccer Q which is an app where',
-                      'https://i.pinimg.com/originals/80/52/16/805216f1569bcbabc2b2a65e946e6cef.jpg',
-                    ),
-                    project(
-                      context,
-                      'Hacker Q Mobile',
-                      Icon(
-                        Icons.android,
-                        color: Colors.white,
-                        size: 15,
-                      ),
-                      'Android',
-                      'Hacker Q mobile description will go here. Welcome to haccer Q which is an app where',
-                      'https://i.pinimg.com/originals/80/52/16/805216f1569bcbabc2b2a65e946e6cef.jpg',
-                    ),
-                    project(
-                      context,
-                      'Hacker Q Mobile',
-                      Icon(
-                        Icons.android,
-                        color: Colors.white,
-                        size: 15,
-                      ),
-                      'Android',
-                      'Hacker Q mobile description will go here. Welcome to haccer Q which is an app where',
-                      'https://i.pinimg.com/originals/80/52/16/805216f1569bcbabc2b2a65e946e6cef.jpg',
-                    ),
-                  ],
+                      myPosts[index][1],
+                      myPosts[index][2],
+                      myPosts[index][4],
+                      myPosts[index][3],
+                      myPosts[index][0],
+                    );
+                  },
                 ),
               ),
             ],
@@ -210,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 Widget profileImage(BuildContext context, imageUrl, Function getImageFromGallery) {
   return GestureDetector(
     onTap: getImageFromGallery,
-      child: Container(
+    child: Container(
       //this container acts like a circle avatar - how you fit a picture inside of a circle
       width: 120,
       height: 120,
@@ -351,31 +348,33 @@ Widget informationBar(BuildContext context) {
 }
 
 Widget project(
-  BuildContext context,
-  String title,
-  Icon icon,
-  String tool,
-  String description,
-  String imageUrl,
-) {
+    BuildContext context,
+    String title,
+    Icon icon,
+    String tool,
+    String description,
+    String imageUrl,
+    ) {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
       Padding(
-        padding: const EdgeInsets.only(left: 15.0),
+        padding: const EdgeInsets.only(left: 30.0),
         child: Container(
-          height: 100,
-          width: 100,
+          height: 75,
+          width: 75,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: Colors.white,
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.fill,
-            ),
+            child: VideoWidget(
+              url: imageUrl,
+              height: 80,
+              width: 80,
+              play: true,
+            )
           ),
         ),
       ),
