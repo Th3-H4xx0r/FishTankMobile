@@ -9,6 +9,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -26,30 +27,49 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                     image: DecorationImage(
                       fit: BoxFit.fill,
                       image: NetworkImage(
-                          'https://wallpapersite.com/images/pages/pic_w/16580.jpg'),
+                          "https://images.unsplash.com/photo-1519770340285-c801df5ff3db?ixlib=rb-1.2.1&w=1000&q=80"),
                     ),
                   ),
                 ),
                 Positioned(
-                  top: 25,
-                  left: 25,
-                  child: Icon(
-                    Icons.keyboard_arrow_left,
-                    size: 35,
-                    color: Colors.white,
-                  ),
-                ),
+                    top: 25,
+                    left: 25,
+                    child: IconButton(
+                        icon: Icon(
+                          Icons.keyboard_arrow_left,
+                          size: 35,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        })),
                 Positioned(
-                  top: 100,
-                  left: 70,
+                  top: 75,
+                  left: 30,
                   right: 15,
                   child: Container(
                     height: 300,
                     width: 400,
                     child: Text(
-                      'Satelights Used to Protect Rare Sharks',
+                      'Mobile App',
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.grey[400],
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 100,
+                  left: 30,
+                  right: 15,
+                  child: Container(
+                    height: 300,
+                    width: 400,
+                    child: Text(
+                      'Delivery Deck',
+                      style: TextStyle(
+                          color: Colors.black,
                           fontSize: 36,
                           fontWeight: FontWeight.w800),
                     ),
@@ -64,20 +84,28 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
             ),
             Column(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+                SizedBox(height:15),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 2.0, color: Colors.grey[900]),
+                    borderRadius: BorderRadius.circular(30)
+                  ),
+                  width: MediaQuery.of(context).size.width-20,
+                  height: 70,
+                  child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     children: <Widget>[
                       Container(
                         //this container acts like a circle avatar - how you fit a picture inside of a circle
-                        width: 80,
-                        height: 80,
+                        width: 50,
+                        height: 50,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            fit: BoxFit.fill,
+                            fit: BoxFit.cover,
                             image: NetworkImage(
-                                'https://wallpapersite.com/images/pages/pic_w/16580.jpg'),
+                                "https://images.unsplash.com/photo-1519770340285-c801df5ff3db?ixlib=rb-1.2.1&w=1000&q=80"),
                           ),
                         ),
                       ),
@@ -85,21 +113,23 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                         width: 10,
                       ),
                       Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'Ben dingover',
+                            'John Doe',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontWeight: FontWeight.w700,
-                              fontSize: 18,
+                              fontSize: 21,
                             ),
                           ),
                           Text(
-                            'supermodel',
+                            'Software Developer',
                             style: TextStyle(
-                              color: Colors.grey,
+                              color: Colors.grey[400],
                               fontWeight: FontWeight.w400,
-                              fontSize: 18,
+                              fontSize: 16,
                             ),
                           ),
                         ],
@@ -107,30 +137,49 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                     ],
                   ),
                 ),
+                ),
                 SizedBox(
                   height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'THIS IS WHERE A NEWS ARTICLE IS LOCATED fffffffffffffffffffffffffffffffafffffffffffffffffffffffffffffffffffffffffffffffffffffajdflkfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffajdflk;jadslfj;l',
+                    'The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by fox whelps. Bawds jog, flick quartz, vex nymphs. Waltz, bad nymph, for quick jigs vex! Fox nymphs grab quick-jived waltz. Brick quiz whangs jumpy veldt fox. Bright vixens jump; dozy fowl quack. Quick wafting zephyrs vex bold Jim. Quick zephyrs blow, vexing daft Jim. Sex-charged fop blew my junk TV quiz. How quickly daft jumping zebras vex. Two driven jocks help fax my big quiz. Quick, Baz, get my woven flax jodhpurs! "Now fax quiz Jack!" my brave ghost pled. Five quacking zephyrs jolt my wax bed. ',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
+                        fontWeight: FontWeight.normal,
+                        fontSize: 18,
+                        color: Colors.white),
                   ),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 5,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'ACTUAL NEWS ARTICLE THE STUFF UP TOP IS AN INTRO !! asdfsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaajlkadslaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaajlkadslaaaaaaaajlkadslaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaajlkadsl;f;jkajkfdj',
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 18,
-                    ),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        'Email: JohnDoe@Example.com',
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 14,
+                            color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        'Phone: 123-456-7890',
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 14,
+                            color: Colors.white),
+                      ),
+                    ],
                   ),
                 ),
               ],
